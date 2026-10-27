@@ -25,6 +25,7 @@
       button:disabled { cursor: wait; opacity: .6; }
       #approve, #sign-in { color: #fff; background: #3867c8; }
       #deny { color: #1d2433; background: #dce5ee; }
+      .back { display: inline-block; color: #3867c8; font-weight: 700; }
       .error { color: #a42d35; }
       @media (prefers-color-scheme: dark) {
         :root { color: #eef3f8; background: #121923; }
@@ -80,6 +81,16 @@
         status.textContent = "Sign in to review the WeekWeave access request.";
         form.hidden = false;
         email.focus();
+      };
+
+      const showMissingRequest = () => {
+        status.textContent = "This is the WeekWeave MCP authorization page. Open it from ChatGPT, or return to the app after confirming your email.";
+        status.className = "error";
+        const back = document.createElement("a");
+        back.className = "back";
+        back.href = "/weekweave-oauth-consent/";
+        back.textContent = "Back to the email confirmation page";
+        actions.append(back);
       };
 
       const loadAuthorization = async () => {
@@ -142,7 +153,7 @@
 
       const main = async () => {
         if (!authorizationId) {
-          showError("This authorization link is missing its request id.");
+          showMissingRequest();
           return;
         }
         sessionStorage.setItem("weekweave_authorization_id", authorizationId);
